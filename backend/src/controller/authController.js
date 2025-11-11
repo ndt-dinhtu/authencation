@@ -113,3 +113,24 @@ export const signIn = async (req, res) => {
     res.status(500).json("Lỗi khi gọi signIn");
   }
 };
+
+export const signOut = async (req, res) => {
+  try {
+    //lấy refresh từ cookie
+    const token = req.cookies?.refreshToken;
+
+    if (token) {
+      //xoá refresh token trong seesion
+
+      await Session.deleteOne({ refreshToken: token });
+
+      //xoá cookie
+      res.clearCookie("refreshToken");
+
+      return res.sendStatus(204)
+    }
+  } catch (error) {
+    console.error("Lỗi khi gọi signOut", error.message);
+    res.status(500).json("Lỗi khi gọi signOut");
+  }
+};
