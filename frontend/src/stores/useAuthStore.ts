@@ -20,7 +20,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             await authService.signUp(firstname, lastname, username, email, password)
 
             toast.success("Đăng kí thành công,Bạn được chuyển sang đăng nhập")
-        } catch (error: any) {
+        } catch (error) {
             console.error("Loi khi dang ki", error)
             toast.error("Đăng kí không thành công")
             throw error
@@ -33,7 +33,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         try {
             set({ loading: true })
             const { accessToken } = await authService.signIn(username, password)
-            set({accessToken})
+            set({ accessToken })
+            await get().fetchMe()
             toast.success("Chào mừng bạn đã quay trở lại")
         } catch (error) {
             console.error("Loi khi dang nhập", error)
@@ -52,6 +53,23 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             console.error(error)
             toast.error("Lỗi khi đăng xuất, hay thu lai")
 
+        } finally {
+            set({ loading: false })
+        }
+    },
+
+    fetchMe: async () => {
+        try {
+            set({ loading: true })
+            const user = await authService.fetchMe()
+            set({ user })
+            console.log(user)
+        } catch (error) {
+            console.error(error)
+            set({ accessToken: null, user: null })
+            toast.error("Loi khi lay thong tin nguoi dung, vui long thu lai")
+        } finally {
+            set({ loading: false })
         }
     }
 }))

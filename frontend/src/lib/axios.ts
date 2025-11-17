@@ -1,3 +1,4 @@
+import { useAuthStore } from "@/stores/useAuthStore"
 import axios from "axios"
 
 export const api = axios.create({
@@ -6,4 +7,13 @@ export const api = axios.create({
             ? "http://localhost:5001/api"
             : "/api",
     withCredentials: true,
+})
+
+//gắn accesstoken vào req header 
+api.interceptors.request.use((config) => {
+    const { accessToken } = useAuthStore.getState()
+    if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`
+    }
+    return config
 })
