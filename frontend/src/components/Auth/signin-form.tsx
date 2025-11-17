@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useAuthStore } from "@/stores/useAuthStore"
+import { useNavigate } from "react-router"
 
 const signInSchema = z.object({
   username: z.string().min(4, "Username phải trên 4 kí tự"),
@@ -18,12 +20,17 @@ export function SigninForm({
   ...props
 }: React.ComponentProps<"div">) {
 
+  const { signIn } = useAuthStore()
+  const navigate = useNavigate()
+
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<SignInFormValues>({
     resolver: zodResolver(signInSchema)
   })
 
   const onSubmit = async (data: SignInFormValues) => {
-    console.log(data)
+    const { username, password } = data
+    await signIn(username, password)
+    navigate("/")
   }
 
   return (
