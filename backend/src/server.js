@@ -4,6 +4,7 @@ import cors from "cors"
 import { connectionDB } from "./libs/db.js";
 import authRoute from "./routers/authRoute.js";
 import userRouter from "./routers/userRouter.js";
+import friendRoute from "./routers/friendRoute.js"
 import cookieParser from "cookie-parser";
 import { protectedRoute } from "./middlerwares/authMiddlerWares.js";
 
@@ -23,6 +24,7 @@ app.use("/api/auth", authRoute);
 //private routes
 app.use(protectedRoute)
 app.use("/api/users",userRouter)
+app.use("/api/friends",friendRoute)
 
 connectionDB().then(() => {
   app.listen(PORT, () => {

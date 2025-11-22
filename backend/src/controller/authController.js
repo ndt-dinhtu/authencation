@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import Session from "../models/Session.js";
 
-const ACCESS_TOKEN_TTL = "5s";
+const ACCESS_TOKEN_TTL = "100000s";
 const REFRESH_TOKEN_TTL = 14 * 24 * 60 * 60 * 1000;
 
 export const signUp = async (req, res) => {
@@ -28,14 +28,14 @@ export const signUp = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     //tạo username mới
-    await User.create({
+    const newUser = await User.create({
       username,
       hashedPassword,
       email,
       displayName: `${firstName} ${lastName}`,
     });
     //return
-    return res.status(201).json({ message: "Đăng ký người dùng thành công" });
+    return res.status(201).json({ message: "Đăng ký người dùng thành công" ,newUser});
   } catch (error) {
     console.error("Lỗi khi gọi signUp", error.message);
     res.status(500).json("Lỗi khi gọi signUp");
