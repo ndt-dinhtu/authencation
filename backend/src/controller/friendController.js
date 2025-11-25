@@ -164,10 +164,17 @@ export const getAllFriends = async (req, res) => {
 
 export const getFriendRequests = async (req, res) => {
   try {
+    const userId = req.user._id;
+    const populateFields = "_id username displayName avatarUrl ";
+
+    const [sent, received] = await Promise.all([
+      FriendRequest.find({ from: userId }).populate("to", populateFields),
+      FriendRequest.find({ to: userId }).populate("from", populateFields),
+    ]);
+
+    return res.status(200).json({ sent, received });
   } catch (error) {
-    console.error("Lỗi khi chạy hàm addFriendRequest: ", error);
-    return res
-      .status(500)
-      .json({ message: "Lỗi khi chạy hàm addFriendRequest" });
+    console.error("Lỗi khi chạy hàm getFriendRequests: ", error);
+    return res.status(500).json({ message: "Lỗi khi chạy hàm getFriendRequests" });
   }
 };
