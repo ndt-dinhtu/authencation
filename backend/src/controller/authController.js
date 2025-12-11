@@ -102,7 +102,7 @@ export const signIn = async (req, res) => {
     //trả accessekToke  về trong refresh
 
     return res.status(200).json({
-      message: `User ${user.displayName} da login thanh cong`,
+      message: `User ${user.displayName} da login thanh cong ${user._id}`,
       accessToken,
     });
   } catch (error) {
@@ -110,7 +110,7 @@ export const signIn = async (req, res) => {
     res.status(500).json("Lỗi khi gọi signIn");
   }
 };
-
+ 
 export const signOut = async (req, res) => {
   try {
     //lấy refresh từ cookie
@@ -132,7 +132,7 @@ export const signOut = async (req, res) => {
   }
 };
 
-//tạo accesstoken từ refreshtoken
+//tạo accesstoken từ refreshtoken 
 export const refreshToken = async (req, res) => {
   try {
     //lấy refreshtooke từ cooki

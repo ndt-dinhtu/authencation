@@ -8,7 +8,7 @@ import {
 
 const router = express.Router();
 
-router.post("/", createConversation);
+router.post("/",checkFriendship, createConversation);
 router.get("/", getConversation);
 router.get("/:conversationId/message", getMessage);
 
