@@ -66,6 +66,71 @@ export const createConversation = async (req, res) => {
   }
 };
 
-export const getConversation = async (req, res) => {};
+export const getConversation = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const conversations = await Conversation.find({
+      "participants.userId": userId,
+    })
+      .sort({ lastMessageAt: -1, updatedAt: -1 })
+      .populate({
+        path: "participants.userId",
+        select: "displayName avatarUrl",
+      })
+      .populate({ path: "seenBy", select: "displayName avatarUrl" })
+      .populate({
+        path: "lastMessage.senderId",
+        select: "displayName avatarUrl",
+      });
 
-export const getMessage = async (req, res) => {};
+    const formatted = conversations.map((conversation) => {
+      const participants = (conversation.participants || []).map((p) => ({
+        _id: p.userId?._id,
+        displayName: p.userId?.displayName,
+        avatarUrl: p.userId?.avatarUrl ?? null,
+        joinedAt: p.joinedAt,
+      }));
+
+      return {
+        ...conversation.toObject(),
+        participants,
+      };
+    });
+    return res.status(200).json({ conversations: formatted });
+  } catch (error) {
+    console.log("Lỗi khi getConversation", error);
+    return res.status(500).json({ message: "Lỗi hệ thống" });
+  }
+};
+
+export const getMessage = async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+    const { limit = 2, cursor } = req.query;
+
+    const query = { conversationId };
+
+    if (cursor) {
+      query.createdAt = { $lt: new Date(cursor) };
+    }
+
+    let messages = await Message.find(query)
+      .sort({ createdAt: -1 })
+      .limit(Number(limit) + 1);
+
+    let nextCursor = null;
+
+    if (messages.length > Number(limit)) {
+      const nextMessage = messages[messages.length - 1];
+      nextCursor = nextMessage.createdAt.toISOString();
+      messages.pop();
+    }
+
+    messages = messages.reverse();
+
+    return res.status(200).json({ messages, nextCursor });
+  } catch (error) {
+    console.error("Lỗi khi getMessage", error);
+    return res.status(500).json({ message: "Lỗi hệ thống" });
+  }
+};
