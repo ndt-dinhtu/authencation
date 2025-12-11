@@ -1,0 +1,494 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Chat App API",
+        "version": "1.0.0",
+        "description": "Swagger API documentation for Chat App backend (Auth, User, Conversation, Messaging, Friend System)"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:5000/api",
+            "description": "Local server"
+        }
+    ],
+    "paths": {
+        "/auth/signup": {
+            "post": {
+                "summary": "Đăng ký người dùng mới",
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "username": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "firstName": {
+                                        "type": "string"
+                                    },
+                                    "lastName": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "username",
+                                    "password",
+                                    "email",
+                                    "firstName",
+                                    "lastName"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Đăng ký thành công"
+                    },
+                    "400": {
+                        "description": "Thiếu dữ liệu"
+                    },
+                    "409": {
+                        "description": "Tài khoản hoặc email đã tồn tại"
+                    }
+                }
+            }
+        },
+        "/auth/signin": {
+            "post": {
+                "summary": "Đăng nhập",
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "username": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "username",
+                                    "password"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Đăng nhập thành công"
+                    },
+                    "401": {
+                        "description": "Sai username hoặc password"
+                    }
+                }
+            }
+        },
+        "/auth/signout": {
+            "post": {
+                "summary": "Đăng xuất",
+                "tags": [
+                    "Auth"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Đăng xuất thành công"
+                    }
+                }
+            }
+        },
+        "/auth/refresh": {
+            "post": {
+                "summary": "Tạo access token mới từ refresh token",
+                "tags": [
+                    "Auth"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Token mới"
+                    },
+                    "401": {
+                        "description": "Token không tồn tại"
+                    },
+                    "403": {
+                        "description": "Token hết hạn"
+                    }
+                }
+            }
+        },
+        "/auth/me": {
+            "get": {
+                "summary": "Lấy thông tin user hiện tại",
+                "tags": [
+                    "User"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User info"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/test": {
+            "get": {
+                "summary": "Test API",
+                "tags": [
+                    "System"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/users": {
+            "get": {
+                "summary": "Lấy danh sách tất cả người dùng",
+                "tags": [
+                    "User"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Danh sách user"
+                    }
+                }
+            }
+        },
+        "/conversations": {
+            "post": {
+                "summary": "Tạo conversation (direct hoặc group)",
+                "tags": [
+                    "Conversation"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "direct",
+                                            "group"
+                                        ]
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "memberIds": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "type",
+                                    "memberIds"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Tạo conversation thành công"
+                    },
+                    "400": {
+                        "description": "Thiếu dữ liệu"
+                    }
+                }
+            },
+            "get": {
+                "summary": "Lấy danh sách conversation của user",
+                "tags": [
+                    "Conversation"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Danh sách conversation"
+                    }
+                }
+            }
+        },
+        "/messages/{conversationId}": {
+            "get": {
+                "summary": "Lấy tin nhắn theo conversation (cursor + limit)",
+                "tags": [
+                    "Message"
+                ],
+                "parameters": [
+                    {
+                        "name": "conversationId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    },
+                    {
+                        "name": "cursor",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Danh sách tin nhắn"
+                    }
+                }
+            }
+        },
+        "/messages/direct": {
+            "post": {
+                "summary": "Gửi tin nhắn trực tiếp",
+                "tags": [
+                    "Message"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "recipientId": {
+                                        "type": "string"
+                                    },
+                                    "content": {
+                                        "type": "string"
+                                    },
+                                    "conversationId": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "content"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Gửi tin nhắn thành công"
+                    },
+                    "400": {
+                        "description": "Thiếu nội dung"
+                    }
+                }
+            }
+        },
+        "/messages/group": {
+            "post": {
+                "summary": "Gửi tin nhắn nhóm",
+                "tags": [
+                    "Message"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "conversationId": {
+                                        "type": "string"
+                                    },
+                                    "content": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "conversationId",
+                                    "content"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Gửi tin nhắn thành công"
+                    },
+                    "400": {
+                        "description": "Thiếu nội dung"
+                    }
+                }
+            }
+        },
+        "/friend-requests": {
+            "post": {
+                "summary": "Gửi lời mời kết bạn",
+                "tags": [
+                    "Friend"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "to": {
+                                        "type": "string"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "to"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Gửi lời mời thành công"
+                    },
+                    "400": {
+                        "description": "Đã có lời mời hoặc đang là bạn bè"
+                    },
+                    "404": {
+                        "description": "User không tồn tại"
+                    }
+                }
+            }
+        },
+        "/friend-requests/{requestId}/accept": {
+            "post": {
+                "summary": "Chấp nhận lời mời kết bạn",
+                "tags": [
+                    "Friend"
+                ],
+                "parameters": [
+                    {
+                        "name": "requestId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Chấp nhận thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy lời mời"
+                    },
+                    "403": {
+                        "description": "Không có quyền chấp nhận"
+                    }
+                }
+            }
+        },
+        "/friend-requests/{requestId}": {
+            "delete": {
+                "summary": "Từ chối lời mời kết bạn",
+                "tags": [
+                    "Friend"
+                ],
+                "parameters": [
+                    {
+                        "name": "requestId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Đã từ chối"
+                    },
+                    "404": {
+                        "description": "Không tồn tại"
+                    },
+                    "403": {
+                        "description": "Không có quyền"
+                    }
+                }
+            }
+        },
+        "/friends": {
+            "get": {
+                "summary": "Lấy danh sách bạn bè",
+                "tags": [
+                    "Friend"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Danh sách bạn bè"
+                    }
+                }
+            }
+        },
+        "/friend-requests": {
+            "get": {
+                "summary": "Lấy danh sách lời mời đã gửi và nhận",
+                "tags": [
+                    "Friend"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Danh sách lời mời"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    },
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ]
+}

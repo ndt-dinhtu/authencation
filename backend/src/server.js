@@ -9,7 +9,9 @@ import friendRoute from "./routers/friendRoute.js";
 import conversationRoute from "./routers/conversationRoute.js";
 import cookieParser from "cookie-parser";
 import { protectedRoute } from "./middlerwares/authMiddlerWares.js";
-
+import SwaggerUI from "swagger-ui-express";
+import fs from "fs";
+ 
 dotenv.config();
 
 const app = express();
@@ -18,7 +20,19 @@ const PORT = process.env.PORT || 5000;
 // middlewares
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+app.use(
+  cors({
+    origin: [process.env.CLIENT_URL, process.env.SWAGGER_URL],
+    credentials: true,
+  })
+);
+
+//swagger
+const swaggerDocument = JSON.parse(
+  fs.readFileSync("./src/swagger.json", "utf-8")
+);
+app.use("/api-docs", SwaggerUI.serve, SwaggerUI.setup(swaggerDocument));
+
 //public routes
 app.use("/api/auth", authRoute);
 
