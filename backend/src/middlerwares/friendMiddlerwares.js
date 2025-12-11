@@ -47,3 +47,31 @@ export const checkFriendship = async (req, res, next) => {
     return res.status(500).json({ message: "Lỗi hệ thống" });
   }
 };
+
+export const checkGroupMembership = async (req, res, next) => {
+  try {
+    const { conversationId } = req.body;
+    const userId = req.user._id;
+
+    const conversation = await Conversation.findById(conversationId);
+    if (!conversation) {
+      return res
+        .status(404)
+        .json({ message: "Khoong tim thay cuoc tro chuyen" });
+    }
+
+    const isMember = conversation.participants.some(
+      (p) => p.userId.toString() === userId.toString()
+    );
+    if (!isMember) {
+      return res
+        .status(403)
+        .json({ message: "Ban khong phai thanh vien cua cuoc tro chuyen" });
+    }
+    req.conversation = conversation;
+    return next();
+  } catch (error) {
+    console.error("Lỗi xảy ra khi kiểm tra thành viên nhóm", error);
+    return res.status(500).json({ message: "Lỗi hệ thống" });
+  }
+};
