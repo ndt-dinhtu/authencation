@@ -6,6 +6,7 @@ import authRoute from "./routers/authRoute.js";
 import userRouter from "./routers/userRouter.js";
 import messageRoute from "./routers/messageRoute.js";
 import friendRoute from "./routers/friendRoute.js";
+import conversationRoute from "./routers/conversationRoute.js";
 import cookieParser from "cookie-parser";
 import { protectedRoute } from "./middlerwares/authMiddlerWares.js";
 
@@ -26,6 +27,7 @@ app.use(protectedRoute);
 app.use("/api/users", userRouter);
 app.use("/api/friends", friendRoute);
 app.use("/api/message", messageRoute);
+app.use("/api/conversations", conversationRoute);
 
 connectionDB().then(() => {
   app.listen(PORT, () => {

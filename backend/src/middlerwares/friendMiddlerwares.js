@@ -26,3 +26,4 @@ export const checkFriendship = async (req, res, next) => {
     return res.status(500).json({message:"Lỗi hệ thống"})
   }
 };
+ 
