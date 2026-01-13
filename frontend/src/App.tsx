@@ -4,7 +4,15 @@ import SignInPage from "./pages/SignInPage"
 import SignUpPage from "./pages/SignUpPage";
 import ChatAppPage from "./pages/ChatAppPage";
 import ProtectedRoutes from "./components/Auth/ProtectedRoutes";
+import { useThemeStore } from "./stores/useThemeStore";
+import { useEffect } from "react";
 function App() {
+
+  const { isDark, setTheme } = useThemeStore();
+
+  useEffect(() => {
+    setTheme(isDark);
+  }, [isDark])
 
   return (
     <>
