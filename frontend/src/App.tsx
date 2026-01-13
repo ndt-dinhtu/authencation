@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router";
 import { Toaster } from "sonner"
-import SignInPage from "./assets/pages/SignInPage"
-import SignUpPage from "./assets/pages/SignUpPage";
-import ChatAppPage from "./assets/pages/ChatAppPage";
+import SignInPage from "./pages/SignInPage"
+import SignUpPage from "./pages/SignUpPage";
+import ChatAppPage from "./pages/ChatAppPage";
 import ProtectedRoutes from "./components/Auth/ProtectedRoutes";
 function App() {
 
