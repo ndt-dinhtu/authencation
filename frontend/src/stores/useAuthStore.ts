@@ -46,6 +46,7 @@ export const useAuthStore = create<AuthState>()(
                 const { accessToken } = await authService.signIn(username, password)
                 get().setAccessToken(accessToken)
                 await get().fetchMe()
+                await useChatStore.getState().fetchConversations()
                 toast.success("Chào mừng bạn đã quay trở lại")
             } catch (error) {
                 console.error("Loi khi dang nhập", error)
