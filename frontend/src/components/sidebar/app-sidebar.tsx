@@ -1,23 +1,8 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import {
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  LifeBuoy,
-  Map,
-  Moon,
-  PieChart,
-  Send,
-  Settings2,
-  SquareTerminal,
-  Sun,
-} from "lucide-react"
+import * as React from "react";
 
-
-import { NavUser } from "@/components/sidebar/nav-user"
+import { NavUser } from "@/components/sidebar/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -30,144 +15,21 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import { Switch } from "../ui/switch"
-import CreateNewChat from "../chat/CreateNewChat"
-import NewGroupChatModal from "../chat/NewGroupChatModal"
-import GroupChatList from "../chat/GroupChatList"
-import AddFriendModel from "../chat/AddFriendModel"
-import DirrectMessageList from "../chat/DirrectMessageList"
-import { useThemeStore } from "@/stores/useThemeStore"
-
-
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
-    {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Support",
-      url: "#",
-      icon: LifeBuoy,
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: Send,
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
-}
+} from "@/components/ui/sidebar";
+import { Switch } from "../ui/switch";
+import CreateNewChat from "../chat/CreateNewChat";
+import NewGroupChatModal from "../chat/NewGroupChatModal";
+import GroupChatList from "../chat/GroupChatList";
+import AddFriendModel from "../chat/AddFriendModel";
+import DirrectMessageList from "../chat/DirrectMessageList";
+import { useThemeStore } from "@/stores/useThemeStore";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { Moon, Sun } from "lucide-react";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { isDark, toggleTheme } = useThemeStore();
 
-  const { isDark, toggleTheme } = useThemeStore()
-
+  const { user } = useAuthStore();
 
   return (
     <Sidebar variant="inset" {...props}>
@@ -175,13 +37,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild className="bg-gradient-primary">
+            <SidebarMenuButton
+              size="lg"
+              asChild
+              className="bg-gradient-primary"
+            >
               <a href="#">
                 <div className="flex w-full items-center px-2 justify-between">
                   <h1 className="text-xl font-bold text-white">APP</h1>
                   <div className="flex items-center gap-2">
                     <Sun className="size-4 text-white/80" />
-                    <Switch checked={isDark} onCheckedChange={toggleTheme} className="data-[state=checked]:bg-background/80" />
+                    <Switch
+                      checked={isDark}
+                      onCheckedChange={toggleTheme}
+                      className="data-[state=checked]:bg-background/80"
+                    />
                     <Moon className="size-4 text-white/80" />
                   </div>
                 </div>
@@ -193,7 +63,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       {/* Content */}
       <SidebarContent>
-
         {/* New Chat */}
         <SidebarGroup>
           <SidebarGroupContent>
@@ -214,13 +83,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroupContent>
         </SidebarGroup>
 
-
         {/* Dirrect Message */}
 
         <SidebarGroup>
-          <SidebarGroupLabel className="uppercase ">
-            Bạn bè
-          </SidebarGroupLabel>
+          <SidebarGroupLabel className="uppercase ">Bạn bè</SidebarGroupLabel>
           <SidebarGroupAction title="Kết bạn" className="cursor-pointer">
             <AddFriendModel />
           </SidebarGroupAction>
@@ -228,14 +94,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <DirrectMessageList />
           </SidebarGroupContent>
         </SidebarGroup>
-
-
       </SidebarContent>
 
       {/* Footer */}
       <SidebarFooter>
-        <NavUser user={data.user} />
+        {user && <NavUser user={user} />}
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
