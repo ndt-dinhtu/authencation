@@ -18,11 +18,11 @@ export const checkFriendship = async (req, res, next) => {
     if (recipientId) {
       const [userA, userB] = pair(me, recipientId);
       const isFriend = await Friend.findOne({ userA, userB });
-      // if (!isFriend) {
-      //   return res
-      //     .status(403)
-      //     .json({ message: "Hai người chưa là bạn, chưa thể nhắn tin được" });
-      // }
+      if (!isFriend) {
+        return res
+          .status(403)
+          .json({ message: "Hai người chưa là bạn, chưa thể nhắn tin được" });
+      }
       return next();
     }
 

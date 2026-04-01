@@ -2,8 +2,6 @@ import { api } from "../lib/axios"
 
 export const authService = {
 
-
-
     signUp: async (
         firstname: string,
         lastname: string,
