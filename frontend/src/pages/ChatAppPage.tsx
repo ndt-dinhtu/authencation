@@ -1,8 +1,7 @@
-import ChatWindownLayout from "@/components/chat/ChatWindownLayout"
-import { AppSidebar } from "@/components/sidebar/app-sidebar"
-import { SidebarProvider } from "@/components/ui/sidebar"
+import ChatWindownLayout from "@/components/chat/ChatWindowLayout";
+import { AppSidebar } from "@/components/sidebar/app-sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 const ChatAppPage = () => {
-
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -11,8 +10,7 @@ const ChatAppPage = () => {
         <ChatWindownLayout />
       </div>
     </SidebarProvider>
+  );
+};
 
-  )
-}
-
-export default ChatAppPage
+export default ChatAppPage;
