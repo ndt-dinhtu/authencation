@@ -3,6 +3,7 @@ import { useNavigate } from "react-router"
 import { Button } from "../ui/button"
 import { useAuthStore } from "@/stores/useAuthStore";
 import { LogOut } from "lucide-react";
+import { toast } from "sonner";
 
 const Logout = () => {
     const { signOut } = useAuthStore()
@@ -13,7 +14,7 @@ const Logout = () => {
             navigate("/signin")
 
         } catch (error) {
-            console.error(error )
+            toast.error(error instanceof Error ? error.message : "Đăng xuất thất bại")
         }
     }
     return (

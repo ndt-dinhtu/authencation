@@ -36,7 +36,7 @@ api.interceptors.response.use(
         // Nếu bị 403 và còn số lần retry
         if (error.response?.status === 403 && originalRequest._retryCount < 4) {
             originalRequest._retryCount += 1;
-            console.log("refresh ", originalRequest._retryCount)
+          
             try {
                 // Gọi refresh token
                 const res = await api.post(

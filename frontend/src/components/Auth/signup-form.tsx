@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useAuthStore } from "@/stores/useAuthStore"
 import { useNavigate } from "react-router"
+import { toast } from "sonner"
 
 
 
@@ -38,7 +39,7 @@ export function SignupForm({
     await signUp(firstname, lastname, username, email, password)
     navigate("/signin") 
   } catch (error) {
-    console.log("Signup failed", error)
+    toast.error(error instanceof Error ? error.message : "Đăng ký thất bại")
   }
 }
   return (

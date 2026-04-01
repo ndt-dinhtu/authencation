@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import tailwindcssAnimate from "tailwindcss-animate";
+import taildwindScrollbar from "tailwind-scrollbar";
 
 export default {
   content: [
@@ -115,5 +116,5 @@ export default {
       },
     },
   },
-  plugins: [tailwindcssAnimate],
+  plugins: [tailwindcssAnimate,taildwindScrollbar],
 } satisfies Config;

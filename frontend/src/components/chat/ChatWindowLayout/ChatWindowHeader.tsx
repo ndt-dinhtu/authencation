@@ -10,8 +10,8 @@ import GroupChatAvatar from "../GroupChatAvatar";
 const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
   const { conversations, activeConversationId } = useChatStore();
   const { user } = useAuthStore();
-  let otherUser
-  console.log(user?._id);
+  let otherUser;
+
   chat = chat ?? conversations.find((c) => c._id === activeConversationId);
 
   if (!chat) {
@@ -23,17 +23,14 @@ const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
   }
   if (chat.type === "direct") {
     const otherUsers = chat.participants.find((p) => p._id !== user?._id);
-    otherUser=otherUsers
+    otherUser = otherUsers;
 
     if (!otherUser || !user) {
       return null;
     }
   }
   return (
-    <header
-      className="sticky top-0 z-10  px-4 py-2 flex items-center "
-      bg-background
-    >
+    <header className="sticky top-0 z-10  px-4 py-2 flex items-center  bg-background">
       <div className="flex items-center gap-2 w-full">
         <SidebarTrigger className="-ml-1 text-foreground" />
         <Separator
@@ -62,7 +59,7 @@ const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
 
           {/* Name */}
           <h2 className="font-semibold text-foreground">
-            {chat.type==="direct"?otherUser?.displayName:chat.group?.name}
+            {chat.type === "direct" ? otherUser?.displayName : chat.group?.name}
           </h2>
         </div>
       </div>
