@@ -6,10 +6,12 @@ import type { Conversation } from "@/types/chat";
 import UserAvatar from "../UserAvatar";
 import StatusBadge from "../StatusBadge";
 import GroupChatAvatar from "../GroupChatAvatar";
+import { useSocketStore } from "@/stores/useSocketStore";
 
 const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
   const { conversations, activeConversationId } = useChatStore();
   const { user } = useAuthStore();
+  const { onlineUsers } = useSocketStore();
   let otherUser;
 
   chat = chat ?? conversations.find((c) => c._id === activeConversationId);
@@ -47,7 +49,13 @@ const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
                   name={otherUser?.displayName || "Unknown"}
                   avatarUrl={otherUser?.avatarUrl || undefined}
                 />
-                <StatusBadge status="offline" />
+                <StatusBadge
+                  status={
+                    onlineUsers.includes(otherUser?._id ?? "")
+                      ? "online"
+                      : "offline"
+                  }
+                />
               </>
             ) : (
               <GroupChatAvatar

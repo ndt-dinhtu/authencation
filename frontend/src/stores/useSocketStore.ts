@@ -2,12 +2,14 @@ import { create } from "zustand";
 import { io, type Socket } from "socket.io-client";
 import { useAuthStore } from "./useAuthStore";
 import type { SocketState } from "@/types/store";
+import { useChatStore } from "./useChatStore";
 
 
 const baseURL = import.meta.env.VITE_SOCKET_URL;
 
 export const useSocketStore = create<SocketState>((set, get) => ({
     socket: null,
+    onlineUsers: [],
     connectSocket: () => {
         const accessToken = useAuthStore.getState().accessToken
         const existingSocket = get().socket;
@@ -27,6 +29,36 @@ export const useSocketStore = create<SocketState>((set, get) => ({
         socket.on("connect", () => {
             console.log("Kết nối Socket.IO thành công, ID:", socket.id);
         });
+
+        // Lắng nghe sự kiện cập nhật danh sách người dùng trực tuyến
+        socket.on("onlineUsers", (usersId) => {
+            set({ onlineUsers: usersId });
+        });
+
+        //new Message
+
+        socket.on("new-message", ({ message, conversation, unreadCounts }) => {
+            useChatStore.getState().addMessage(message)
+
+            const lastMessage = {
+                _id: conversation.lastMessage._id,
+                content: conversation.lastMessage.content,
+                createdAt: conversation.lastMessage.createdAt,
+                sender: {
+                    _id: conversation.lastMessage.senderId,
+                    displayName: "",
+                    avatarUrl: null
+                }
+            };
+
+            const updateConversation= {...conversation,lastMessage,unreadCounts}
+
+            if(useChatStore.getState().activeConversationId===message.conversationId){
+                //danh dau da doc   
+            }
+
+            useChatStore.getState().updateConversation(updateConversation)
+        })
     },
     disconnectSocket: () => {
         const socket = get().socket;
