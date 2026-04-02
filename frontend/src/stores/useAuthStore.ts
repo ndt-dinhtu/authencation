@@ -3,7 +3,7 @@ import { toast } from "sonner"
 import { authService } from '@/services/authServices'
 import type { AuthState } from '@/types/store'
 import { persist } from 'zustand/middleware'
-import { useChatStore } from './useStateStore'
+import { useChatStore } from './useChatStore'
 
 
 export const useAuthStore = create<AuthState>()(

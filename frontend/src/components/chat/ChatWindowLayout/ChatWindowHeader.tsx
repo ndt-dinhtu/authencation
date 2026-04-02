@@ -1,7 +1,7 @@
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { useChatStore } from "@/stores/useStateStore";
+import { useChatStore } from "@/stores/useChatStore";
 import type { Conversation } from "@/types/chat";
 import UserAvatar from "../UserAvatar";
 import StatusBadge from "../StatusBadge";
