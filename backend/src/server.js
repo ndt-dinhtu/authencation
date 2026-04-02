@@ -11,10 +11,11 @@ import cookieParser from "cookie-parser";
 import { protectedRoute } from "./middlerwares/authMiddlerWares.js";
 import SwaggerUI from "swagger-ui-express";
 import fs from "fs";
- 
+import { app, server } from "./socket/index.js";
+
 dotenv.config();
 
-const app = express();
+
 const PORT = process.env.PORT || 5000;
 
 // middlewares
@@ -24,12 +25,12 @@ app.use(
   cors({
     origin: [process.env.CLIENT_URL, process.env.SWAGGER_URL],
     credentials: true,
-  })
+  }),
 );
 
 //swagger
 const swaggerDocument = JSON.parse(
-  fs.readFileSync("./src/swagger.json", "utf-8")
+  fs.readFileSync("./src/swagger.json", "utf-8"),
 );
 app.use("/api-docs", SwaggerUI.serve, SwaggerUI.setup(swaggerDocument));
 
@@ -44,7 +45,7 @@ app.use("/api/message", messageRoute);
 app.use("/api/conversations", conversationRoute);
 
 connectionDB().then(() => {
-  app.listen(PORT, () => {
+  server.listen(PORT, () => {
     console.log(`Sever dang chay tren cong ${PORT}`);
   });
 });

@@ -4,9 +4,7 @@ import axios from "axios";
 
 export const api = axios.create({
     baseURL:
-        import.meta.env.MODE === "development"
-            ? "http://localhost:5001/api"
-            : "/api",
+        import.meta.env.VITE_API_URL,
     withCredentials: true,
 });
 
@@ -36,7 +34,7 @@ api.interceptors.response.use(
         // Nếu bị 403 và còn số lần retry
         if (error.response?.status === 403 && originalRequest._retryCount < 4) {
             originalRequest._retryCount += 1;
-          
+
             try {
                 // Gọi refresh token
                 const res = await api.post(
