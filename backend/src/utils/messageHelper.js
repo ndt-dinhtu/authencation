@@ -24,8 +24,38 @@ export const updateConversationAfterCreateMessage = async (
   });
 };
 
+// export const emitNewMessages = async (io, conversation, message) => {
+//   io.to(conversation._id.toString()).emit("new-message", {
+//     message,
+//     conversation: {
+//       _id: conversation._id,
+//       lastMessage: conversation.lastMessage,
+//       lastMessageAt: conversation.lastMessageAt,
+//     },
+//     unreadCounts: conversation.unreadCounts,
+//   });
+// };
+
 export const emitNewMessages = async (io, conversation, message) => {
-  io.to(conversation._id.toString()).emit("new-message", {
+  const roomId = conversation._id.toString();
+
+  console.log("--- Bắt đầu Emit Socket ---");
+  console.log("Phát tới Room ID:", roomId);
+  console.log("Nội dung tin nhắn:", {
+    id: message._id,
+    content: message.content,
+    sender: message.senderId,
+  });
+  console.log("Trạng thái Sidebar mới:", {
+    lastMsg: conversation.lastMessage.content,
+    updatedAt: conversation.lastMessageAt,
+  });
+  console.log(
+    "Bảng số tin chưa đọc (unreadCounts):",
+    Object.fromEntries(conversation.unreadCounts), 
+  );
+
+  io.to(roomId).emit("new-message", {
     message,
     conversation: {
       _id: conversation._id,
@@ -34,4 +64,6 @@ export const emitNewMessages = async (io, conversation, message) => {
     },
     unreadCounts: conversation.unreadCounts,
   });
+
+  console.log("--- Emit thành công ---");
 };

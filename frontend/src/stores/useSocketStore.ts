@@ -51,13 +51,27 @@ export const useSocketStore = create<SocketState>((set, get) => ({
                 }
             };
 
-            const updateConversation= {...conversation,lastMessage,unreadCounts}
+            const updateConversation = { ...conversation, lastMessage, unreadCounts }
 
-            if(useChatStore.getState().activeConversationId===message.conversationId){
-                //danh dau da doc   
+            if (useChatStore.getState().activeConversationId === message.conversationId) {
+                useChatStore.getState().markAsSeen()
             }
 
             useChatStore.getState().updateConversation(updateConversation)
+        })
+
+
+        //read  Mesaage
+
+        socket.on("read-message", ({ conversation, lastMessage }) => {
+            const updated = {
+                _id: conversation._id,
+                lastMessage,
+                lastMessageAt: conversation.lastMessageAt,
+                unreadCount: conversation.unreadCounts,
+                seenBy: conversation.seenBy
+            }
+            useChatStore.getState().updateConversation(updated)
         })
     },
     disconnectSocket: () => {

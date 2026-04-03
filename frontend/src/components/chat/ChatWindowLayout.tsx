@@ -5,16 +5,32 @@ import ChatWindownSkeleton from "./ChatWindowLayout/ChatWindowSkeleton.tsx";
 import ChatWindowHeader from "./ChatWindowLayout/ChatWindowHeader.tsx";
 import ChatWindowBody from "./ChatWindowLayout/ChatWindowBody.tsx";
 import MessageInput from "./ChatWindowLayout/MessageInput.tsx";
+import { useEffect } from "react";
 const ChatWindowLayout = () => {
   const {
     conversations,
     activeConversationId,
     messages,
     messageLoading: loading,
+    markAsSeen,
   } = useChatStore();
 
   const selectedConvo =
     conversations.find((c) => c._id === activeConversationId) ?? null;
+
+  useEffect(() => {
+    if (!selectedConvo) return;
+
+    const markSeen = async () => {
+      try {
+        await markAsSeen();
+      } catch (error) {
+        console.error("Lỗi khi markSeen: ", error);
+      }
+    };
+
+    markSeen();
+  }, [selectedConvo, markAsSeen]);
 
   if (!selectedConvo) {
     return <ChatWelcomeScreen />;

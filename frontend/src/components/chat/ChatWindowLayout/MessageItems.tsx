@@ -29,15 +29,14 @@ const MessageItems = ({
       300000; // 5 phút
 
   const participant = selectedConvo.participants.find(
-    (p: Participant) =>
-      p._id.toString() === message.senderId.toString()
+    (p: Participant) => p._id.toString() === message.senderId.toString(),
   );
 
   return (
     <div
       className={cn(
         "flex gap-2 mb-2 message-bounce w-full",
-        message.isOwn ? "flex-row-reverse" : "flex-row"
+        message.isOwn ? "flex-row-reverse" : "flex-row",
       )}
     >
       {/* Avatar */}
@@ -59,7 +58,7 @@ const MessageItems = ({
       <div
         className={cn(
           "flex flex-col max-w-[70%]",
-          message.isOwn ? "items-end" : "items-start"
+          message.isOwn ? "items-end" : "items-start",
         )}
       >
         {/* TIME (TRÊN - CENTER) */}
@@ -78,31 +77,28 @@ const MessageItems = ({
               "p-3 rounded-2xl",
               message.isOwn
                 ? "bg-blue-500 text-white rounded-tr-none"
-                : "bg-secondary rounded-tl-none"
+                : "bg-secondary rounded-tl-none",
             )}
           >
-            <p className="text-sm leading-relaxed">
-              {message.content}
-            </p>
+            <p className="text-sm leading-relaxed">{message.content}</p>
           </Card>
         </div>
 
         {/* STATUS */}
         <div className="flex items-center gap-2 mt-1">
-          {message.isOwn &&
-            message._id === selectedConvo.lastMessage?._id && (
-              <Badge
-                variant="outline"
-                className={cn(
-                  "text-[10px] px-1 h-3 border-0 uppercase font-bold",
-                  lastMessageStatus === "seen"
-                    ? "text-blue-500"
-                    : "text-muted-foreground"
-                )}
-              >
-                {lastMessageStatus}
-              </Badge>
-            )}
+          {message.isOwn && message._id === selectedConvo.lastMessage?._id && (
+            <Badge
+              variant="outline"
+              className={cn(
+                "text-[10px] px-1 h-3 border-0 uppercase font-bold",
+                lastMessageStatus === "seen"
+                  ? "text-blue-500"
+                  : "text-muted-foreground",
+              )}
+            >
+              {lastMessageStatus}
+            </Badge>
+          )}
         </div>
       </div>
     </div>
