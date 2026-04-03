@@ -12,6 +12,7 @@ interface MessageItemsProps {
   lastMessageStatus: "delivered" | "seen";
 }
 
+
 const MessageItems = ({
   message,
   index,
@@ -19,81 +20,73 @@ const MessageItems = ({
   selectedConvo,
   lastMessageStatus,
 }: MessageItemsProps) => {
-  const pre = messages[index - 1];
+  const prev = index + 1 < messages.length ? messages[index + 1] : undefined;
 
-  const isGroupBreak =
+  const isShowTime =
     index === 0 ||
-    message.senderId !== pre?.senderId ||
     new Date(message.createdAt).getTime() -
-      new Date(pre?.createdAt || 0).getTime() >
+      new Date(prev?.createdAt || 0).getTime() >
       300000; // 5 phút
 
+  const isGroupBreak = isShowTime || message.senderId !== prev?.senderId;
+
   const participant = selectedConvo.participants.find(
-    (p: Participant) => p._id.toString() === message.senderId.toString(),
+    (p: Participant) => p._id.toString() === message.senderId.toString()
   );
 
   return (
-    <div
-      className={cn(
-        "flex gap-2 mb-2 message-bounce w-full",
-        message.isOwn ? "flex-row-reverse" : "flex-row",
-      )}
-    >
-      {/* Avatar */}
-      {!message.isOwn ? (
-        <div className="w-8 shrink-0">
-          {isGroupBreak && (
-            <UserAvatar
-              type="chat"
-              name={participant?.displayName ?? "Moji"}
-              avatarUrl={participant?.avatarUrl ?? undefined}
-            />
-          )}
-        </div>
-      ) : (
-        <div className="w-8 shrink-0" />
+    <>
+      {/* time */}
+      {isShowTime && (
+        <span className="flex justify-center text-xs text-muted-foreground px-1">
+          {formatMessageTime(new Date(message.createdAt))}
+        </span>
       )}
 
-      {/* Nội dung */}
       <div
         className={cn(
-          "flex flex-col max-w-[70%]",
-          message.isOwn ? "items-end" : "items-start",
+          "flex gap-2 message-bounce mt-1",
+          message.isOwn ? "justify-end" : "justify-start"
         )}
       >
-        {/* TIME (TRÊN - CENTER) */}
-        {isGroupBreak && (
-          <div className="w-full flex justify-center mb-1">
-            <span className="text-[10px] text-muted-foreground px-2 py-0.5 bg-muted rounded-full">
-              {formatMessageTime(new Date(message.createdAt))}
-            </span>
+        {/* avatar */}
+        {!message.isOwn && (
+          <div className="w-8">
+            {isGroupBreak && (
+              <UserAvatar
+                type="chat"
+                name={participant?.displayName ?? "Moji"}
+                avatarUrl={participant?.avatarUrl ?? undefined}
+              />
+            )}
           </div>
         )}
 
-        {/* MESSAGE */}
-        <div className="flex items-center gap-2">
+        {/* tin nhắn */}
+        <div
+          className={cn(
+            "max-w-xs lg:max-w-md space-y-1 flex flex-col",
+            message.isOwn ? "items-end" : "items-start"
+          )}
+        >
           <Card
             className={cn(
-              "p-3 rounded-2xl",
-              message.isOwn
-                ? "bg-blue-500 text-white rounded-tr-none"
-                : "bg-secondary rounded-tl-none",
+              "p-3",
+              message.isOwn ? "chat-bubble-sent border-0" : "chat-bubble-received"
             )}
           >
-            <p className="text-sm leading-relaxed">{message.content}</p>
+            <p className="text-sm leading-relaxed break-words">{message.content}</p>
           </Card>
-        </div>
 
-        {/* STATUS */}
-        <div className="flex items-center gap-2 mt-1">
+          {/* seen/ delivered */}
           {message.isOwn && message._id === selectedConvo.lastMessage?._id && (
             <Badge
               variant="outline"
               className={cn(
-                "text-[10px] px-1 h-3 border-0 uppercase font-bold",
+                "text-xs px-1.5 py-0.5 h-4 border-0",
                 lastMessageStatus === "seen"
-                  ? "text-blue-500"
-                  : "text-muted-foreground",
+                  ? "bg-primary/20 text-primary"
+                  : "bg-muted text-muted-foreground"
               )}
             >
               {lastMessageStatus}
@@ -101,7 +94,7 @@ const MessageItems = ({
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

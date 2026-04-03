@@ -18,8 +18,10 @@ export const useAuthStore = create<AuthState>()(
 
         clearState: () => {
             set({ accessToken: null, user: null, loading: false })
+             useChatStore.getState().reset()
             localStorage.clear()
-            useChatStore.getState().reset()
+            sessionStorage.clear()
+           
         },
 
         signUp: async (firstname, lastname, username, email, password) => {
@@ -40,9 +42,9 @@ export const useAuthStore = create<AuthState>()(
 
         signIn: async (username, password) => {
             try {
+                get().clearState()
                 set({ loading: true })
-                localStorage.clear()
-                useChatStore.getState().reset()
+             
                 const { accessToken } = await authService.signIn(username, password)
                 get().setAccessToken(accessToken)
                 await get().fetchMe()
