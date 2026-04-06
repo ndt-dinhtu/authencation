@@ -4,7 +4,7 @@ import { create } from "zustand"
 
 export const useFriendStore = create<FriendState>((set, get) => ({
     loading: false,
-    searchByUserName: async (username) => {
+    searchByUsername: async (username) => {
         try {
             set({ loading: true })
             const user = await friendService.searchByUserName(username)
@@ -22,8 +22,9 @@ export const useFriendStore = create<FriendState>((set, get) => ({
             const resultMessage = await friendService.sendFriendRequest(to, message)
             return resultMessage
         } catch (error) {
-            console.error("loi xay ra khi gui loi moi ket ban: ", error)
-            return null
+            const errorMsg = error.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại";
+            console.error("Lỗi gửi lời mời:", errorMsg);
+            throw new Error(errorMsg)
         } finally {
             set({ loading: false })
         }
