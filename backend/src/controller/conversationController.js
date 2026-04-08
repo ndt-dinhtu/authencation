@@ -69,7 +69,15 @@ export const createConversation = async (req, res) => {
 
     const formatted = { ...conversation.toObject(), participants };
 
-    return res.status(201).json({ conversation:formatted });
+    if (type === "group") {
+      const participantIds = [userId, ...memberIds].map((id) => id.toString());
+      const uniqueParticipantIds = [...new Set(participantIds)];
+      uniqueParticipantIds.forEach((participantId) => {
+        io.to(participantId).emit("new-group", formatted);
+      });
+    }
+
+    return res.status(201).json({ conversation: formatted });
   } catch (error) {
     console.error("Lỗi khi createConversation", error);
     return res.status(500).json({ message: "Lỗi hệ thông" });

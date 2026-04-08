@@ -4,7 +4,6 @@ import express from "express";
 import { socketAuthMiddleware } from "../middlerwares/socketMiddlerwares.js";
 import { getUserConversationsForSocketIo } from "../controller/conversationController.js";
 
-
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -31,9 +30,11 @@ io.on("connection", async (socket) => {
     socket.join(id);
   });
 
-  socket.on("join-conversation",(conversationsId)=>{
-    socket.join(conversationsId)
-  })
+  socket.on("join-conversation", (conversationsId) => {
+    socket.join(conversationsId);
+  });
+
+  socket.join(user._id.toString());
 
   socket.on("disconnect", () => {
     onlineUsers.delete(user._id);
