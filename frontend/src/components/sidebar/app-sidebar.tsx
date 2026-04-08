@@ -65,19 +65,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent className="beautiful-scrollbar">
         {/* New Chat */}
         <SidebarGroup>
-          <SidebarGroupContent >
+          <SidebarGroupContent>
             <CreateNewChat />
           </SidebarGroupContent>
         </SidebarGroup>
         {/* Groud Chat */}
 
         <SidebarGroup>
-          <SidebarGroupLabel className="uppercase ">
-            Nhóm chát
-          </SidebarGroupLabel>
-          <SidebarGroupAction title="Tạo nhóm" className="cursor-pointer">
+          <div className="flex items-center justify-between">
+            <SidebarGroupLabel className="uppercase ">
+              Nhóm chát
+            </SidebarGroupLabel>
             <NewGroupChatModal />
-          </SidebarGroupAction>
+          </div>
+
           <SidebarGroupContent>
             <GroupChatList />
           </SidebarGroupContent>
@@ -97,9 +98,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
 
       {/* Footer */}
-      <SidebarFooter>
-        {user && <NavUser user={user} />}
-      </SidebarFooter>
+      <SidebarFooter>{user && <NavUser user={user} />}</SidebarFooter>
     </Sidebar>
   );
 }
