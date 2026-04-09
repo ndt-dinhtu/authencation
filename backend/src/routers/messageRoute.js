@@ -6,7 +6,7 @@ import {
 import {
   checkFriendship,
   checkGroupMembership,
-} from "../middlerwares/friendMiddlerWares.js";
+} from "../middlerwares/friendMiddlerwares.js";
 
 const router = express.Router();
 
