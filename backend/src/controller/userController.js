@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import { uploadImageFromBuffer } from "../middlerwares/uploadMiddlerwares.js";
 
 export const authMe = async (req, res) => {
   try {

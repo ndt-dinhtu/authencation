@@ -4,6 +4,7 @@ import UserAvatar from "../chat/UserAvatar";
 import { Badge } from "../ui/badge";
 import { cn } from "@/lib/utils";
 import { useSocketStore } from "@/stores/useSocketStore";
+import AvatarUploader from "./AvatarUploader";
 
 interface ProfileCardProps {
   user: User | null;
@@ -30,6 +31,7 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
             className="ring-4 ring-white shadow-lg"
           />
 
+           <AvatarUploader/> 
 
         </div>
 

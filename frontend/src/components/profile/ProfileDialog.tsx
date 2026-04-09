@@ -1,7 +1,8 @@
 import React, { type Dispatch, type SetStateAction } from "react";
-import { Dialog, DialogContent } from "../ui/dialog";
+import { Dialog, DialogContent, DialogHeader } from "../ui/dialog";
 import ProfileCard from "./ProfileCard";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { DialogTitle } from "@radix-ui/react-dialog";
 
 interface ProfileDialogPops {
   open: boolean;
@@ -16,16 +17,17 @@ const ProfileDialog = ({ open, setOpen }: ProfileDialogPops) => {
       <DialogContent className="overflow-y-auto p-0 bg-transparent border-0 shadow-2xl">
         <div className="bg-gradient-glass">
           <div className="max-w-4xl mx-auto p-4">
-            <div className="mb-6">
-              <div className="text-2xl font-bold text-foreground text-center">
+            <DialogHeader className="mb-6">
+              <DialogTitle className="text-2xl font-bold text-foreground text-center">
                 {" "}
                 Profile && Setting
-              </div>
-            </div>
+              </DialogTitle>  
+            </DialogHeader>
             <ProfileCard user={user} />
           </div>
         </div>
       </DialogContent>
+
     </Dialog>
   );
 };
