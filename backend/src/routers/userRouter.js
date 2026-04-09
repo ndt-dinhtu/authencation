@@ -6,7 +6,7 @@ import {
   test,
   uploadAvatar,
 } from "../controller/userController.js";
-import { upload } from "../middlerwares/uploadMiddlerwares.js";
+import { upload } from "../middlewares/uploadMiddlerwares.js";
 const router = express.Router();
 
 router.get("/me", authMe);
