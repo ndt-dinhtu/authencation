@@ -1,16 +1,15 @@
 import { useChatStore } from "@/stores/useChatStore.tsx";
 import { SidebarInset } from "../ui/sidebar.tsx";
 import ChatWelcomeScreen from "./ChatWindowLayout/ChatWelcomeScreen.tsx";
-import ChatWindownSkeleton from "./ChatWindowLayout/ChatWindowSkeleton.tsx";
 import ChatWindowHeader from "./ChatWindowLayout/ChatWindowHeader.tsx";
 import ChatWindowBody from "./ChatWindowLayout/ChatWindowBody.tsx";
 import MessageInput from "./ChatWindowLayout/MessageInput.tsx";
 import { useEffect } from "react";
+import ChatWindowSkeleton from "../sekeleton/ChatWindowSkeleton.tsx";
 const ChatWindowLayout = () => {
   const {
     conversations,
     activeConversationId,
-    messages,
     messageLoading: loading,
     markAsSeen,
   } = useChatStore();
@@ -37,7 +36,7 @@ const ChatWindowLayout = () => {
   }
 
   if (loading) {
-    return <ChatWindownSkeleton />;
+    return <ChatWindowSkeleton />;
   }
 
   return (
