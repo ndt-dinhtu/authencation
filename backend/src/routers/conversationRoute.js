@@ -1,5 +1,5 @@
 import express from "express";
-import { checkFriendship } from "../middlerwares/friendMiddlerWares.js";
+import { checkFriendship } from "../middlerwares/friendMiddlerwares.js";
 import {
   createConversation,
   getConversation,
