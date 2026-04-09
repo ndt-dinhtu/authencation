@@ -8,7 +8,7 @@ import messageRoute from "./routers/messageRoute.js";
 import friendRoute from "./routers/friendRoute.js";
 import conversationRoute from "./routers/conversationRoute.js";
 import cookieParser from "cookie-parser";
-import { protectedRoute } from "./middlerwares/authMiddlerWares.js";
+import { protectedRoute } from "./middlerwares/authMiddlerwares.js";
 import SwaggerUI from "swagger-ui-express";
 import fs from "fs";
 import { app, server } from "./socket/index.js";
