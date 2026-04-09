@@ -3,6 +3,10 @@ import { Dialog, DialogContent, DialogHeader } from "../ui/dialog";
 import ProfileCard from "./ProfileCard";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { DialogTitle } from "@radix-ui/react-dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import PersonalInfoForm from "./PersonalInfoForm";
+import PreferencesForm from "./PreferencesForm";
+import PrivacySettings from "./PrivacySettings";
 
 interface ProfileDialogPops {
   open: boolean;
@@ -21,13 +25,47 @@ const ProfileDialog = ({ open, setOpen }: ProfileDialogPops) => {
               <DialogTitle className="text-2xl font-bold text-foreground text-center">
                 {" "}
                 Profile && Setting
-              </DialogTitle>  
+              </DialogTitle>
             </DialogHeader>
             <ProfileCard user={user} />
+
+            <Tabs defaultValue="personal" className="my-4">
+              <TabsList className="grid w-full grid-cols-3 glass-light">
+                <TabsTrigger
+                  value="personal"
+                  className="data-[state=active]:glass-strong"
+                >
+                  Tài Khoản
+                </TabsTrigger>
+                <TabsTrigger
+                  value="preferences"
+                  className="data-[state=active]:glass-strong"
+                >
+                  Cấu Hình
+                </TabsTrigger>
+                <TabsTrigger
+                  value="privacy"
+                  className="data-[state=active]:glass-strong"
+                >
+                  Bảo Mật
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="personal">
+                <PersonalInfoForm userInfo={user} />
+              </TabsContent>
+
+              <TabsContent value="preferences">
+                <PreferencesForm />
+              </TabsContent>
+
+              <TabsContent value="privacy">
+                <PrivacySettings />
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
       </DialogContent>
-
     </Dialog>
   );
 };
