@@ -37,7 +37,7 @@ export function SignupForm({
   try {
     const { firstname, lastname, username, email, password } = data
     await signUp(firstname, lastname, username, email, password)
-    navigate("/signin") 
+    navigate("/") 
   } catch (error) {
     toast.error(error instanceof Error ? error.message : "Đăng ký thất bại")
   }

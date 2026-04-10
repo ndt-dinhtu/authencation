@@ -10,13 +10,12 @@ const REFRESH_TOKEN_TTL = 14 * 24 * 60 * 60 * 1000;
 export const signUp = async (req, res) => {
   try {
     const { username, password, email, firstName, lastName } = req.body;
+
+    // 1. Validation (như cũ)
     if (!username || !password || !email || !firstName || !lastName) {
-      return res.status(400).json({
-        message: "không thể thiếu username password email firstname lastname",
-      });
+      return res.status(400).json({ message: "Thiếu thông tin đăng ký" });
     }
 
-    // Kiểm tra username hoặc email đã tồn tại
     const duplicateUser = await User.findOne({ username });
     const duplicateEmail = await User.findOne({ email });
     if (duplicateUser || duplicateEmail) {
@@ -24,34 +23,66 @@ export const signUp = async (req, res) => {
         .status(409)
         .json({ message: "Người dùng hoặc email đã tồn tại" });
     }
-    //mã hoá password
-    const hashedPassword = await bcrypt.hash(password, 10);
 
-    //tạo username mới
+    // 2. Mã hóa mật khẩu và tạo User (như cũ)
+    const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({
       username,
       hashedPassword,
       email,
       displayName: `${firstName} ${lastName}`,
     });
-    //return
-    return res.status(201).json({ message: "Đăng ký người dùng thành công" ,newUser});
+
+
+    // 3. Tạo Access Token
+    const accessToken = jwt.sign(
+      { userId: newUser._id },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: ACCESS_TOKEN_TTL },
+    );
+
+    // 4. Tạo Refresh Token
+    const refreshToken = crypto.randomBytes(64).toString("hex");
+
+    // 5. Lưu Session vào Database
+    await Session.create({
+      userId: newUser._id,
+      refreshToken,
+      expiresAt: new Date(Date.now() + REFRESH_TOKEN_TTL),
+    });
+
+    // 6. Thiết lập Cookie
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true, 
+      sameSite: "none",
+      maxAge: REFRESH_TOKEN_TTL,
+    });
+
+    // 7. Trả về thông báo thành công kèm Token
+    return res.status(201).json({
+      message: "Đăng ký và đăng nhập thành công",
+      newUser: {
+        username: newUser.username,
+        displayName: newUser.displayName,
+        email: newUser.email,
+      },
+      accessToken,
+    });
   } catch (error) {
     console.error("Lỗi khi gọi signUp", error.message);
-    res.status(500).json("Lỗi khi gọi signUp");
+    res.status(500).json("Lỗi hệ thống khi đăng ký");
   }
 };
-
 export const signIn = async (req, res) => {
   try {
     // lấy input từ người dùng
-    const { username, password } = req.body;  
+    const { username, password } = req.body;
 
     if (!username || !password) {
       return res.status(400).json({ message: "Thiếu username hoặc passwod" });
     }
 
-    //lấy hashedpassword trong database để so sánh pass input
 
     const user = await User.findOne({ username });
 
@@ -76,7 +107,7 @@ export const signIn = async (req, res) => {
       process.env.ACCESS_TOKEN_SECRET,
       {
         expiresIn: ACCESS_TOKEN_TTL,
-      }
+      },
     );
 
     //tạo refresh token
@@ -110,7 +141,7 @@ export const signIn = async (req, res) => {
     res.status(500).json("Lỗi khi gọi signIn");
   }
 };
- 
+
 export const signOut = async (req, res) => {
   try {
     //lấy refresh từ cookie
@@ -132,7 +163,7 @@ export const signOut = async (req, res) => {
   }
 };
 
-//tạo accesstoken từ refreshtoken 
+//tạo accesstoken từ refreshtoken
 export const refreshToken = async (req, res) => {
   try {
     //lấy refreshtooke từ cooki
@@ -149,7 +180,7 @@ export const refreshToken = async (req, res) => {
     }
 
     const user = await User.findById(session.userId);
-    if (!user) return res.status(401).json({ message: "User không tồn tại" });    
+    if (!user) return res.status(401).json({ message: "User không tồn tại" });
 
     //kiểm tả xem token hết hạn chưa
     if (session.expiresAt < new Date()) {
@@ -161,7 +192,7 @@ export const refreshToken = async (req, res) => {
     const accessToken = jwt.sign(
       { userId: session.userId },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: ACCESS_TOKEN_TTL }
+      { expiresIn: ACCESS_TOKEN_TTL },
     );
 
     //return
