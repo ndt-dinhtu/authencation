@@ -12,4 +12,5 @@ router.get("/me", authMe);
 router.get("/getAllUsers", getAllUsers);
 router.get("/search", searchUserByUsername);
 router.post("/uploadAvatar", upload.single("file"), uploadAvatar);
+router.put("/me", authMe);
 export default router;

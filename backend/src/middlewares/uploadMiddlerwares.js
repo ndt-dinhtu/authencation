@@ -29,3 +29,14 @@ export const uploadImageFromBuffer = (buffer, options) => {
     uploadStream.end(buffer);
   });
 };
+
+export const deleteImageFromCloudinary = async (publicId) => {
+  try {
+    if (!publicId) return;
+    const result = await cloudinary.uploader.destroy(publicId);
+    return result;
+  } catch (error) {
+    console.error("Lỗi khi xóa ảnh trên Cloudinary:", error.message);
+    throw error;
+  }
+};

@@ -37,8 +37,8 @@ const userSchema = new mongoose.Schema(
     },
     phone: {
       type: String,
-      sparse: true, // cho phép null, nhưng nếu có thì không được trùng
-      unique: true, //  thêm unique để "sparse" có ý nghĩa
+      sparse: true, 
+      unique: true, 
     },
   },
   {
